@@ -1,19 +1,23 @@
 package com.example.simplegit.security;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.stereotype.Component;
 
+import static org.apache.catalina.webresources.TomcatURLStreamHandlerFactory.disable;
+@Configuration
 public class SecurityConfig {
-}
-// src/main/java/com/example/springbootcrud/config/SecurityConfig.java
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable() // disable CSRF for postman/browser testing
-                .authorizeHttpRequests()
-                .anyRequest().permitAll(); // allow all endpoints without auth
+                .csrf(csrf -> csrf.disable()) // Disable CSRF for testing
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .anyRequest().permitAll());
+        // Allow all
         return http.build();
     }
 }
